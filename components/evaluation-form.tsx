@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Level, PublicQuestion } from '@/lib/types';
 import { levelLabel } from '@/lib/types';
-import { END_REASON_LABELS, type EndReason } from '@/lib/exam';
+import { END_REASON_LABELS, EXAM_TIME_LIMIT_MINUTES, type EndReason } from '@/lib/exam';
 
 type Phase = 'form' | 'starting' | 'exam' | 'ended';
 type Answers = Record<string, number[]>;
@@ -314,7 +314,7 @@ export default function EvaluationForm() {
           <h3 className="font-semibold text-amber-900">Reglas de la evaluación</h3>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-amber-900">
             <li>
-              ⏱️ Tenés <strong>{exam ? exam.timeLimitMinutes : 30} minutos</strong> cronometrados
+              ⏱️ Tenés <strong>{exam ? exam.timeLimitMinutes : EXAM_TIME_LIMIT_MINUTES} minutos</strong> cronometrados
               desde que tocás «Comenzar». Al agotarse, la evaluación se envía automáticamente
               con lo que hayas respondido.
             </li>

@@ -1,7 +1,7 @@
 // Configuración del examen — compartida servidor/cliente (sin secretos).
 
 /** Tiempo máximo del examen en minutos. */
-export const EXAM_TIME_LIMIT_MINUTES = 30;
+export const EXAM_TIME_LIMIT_MINUTES = 20;
 
 /** Tolerancia del servidor para envíos tardíos (latencia de red), en segundos. */
 export const EXAM_GRACE_SECONDS = 120;

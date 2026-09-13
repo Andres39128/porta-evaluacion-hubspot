@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { EXAM_TIME_LIMIT_MINUTES } from '@/lib/exam';
 
 export default function HomePage() {
   return (
@@ -42,7 +43,8 @@ export default function HomePage() {
           <ul className="list-disc space-y-1 pl-5 text-sm text-slate-600">
             <li>Preguntas de selección única, selección múltiple y verdadero/falso.</li>
             <li>
-              Tiempo máximo: <strong>30 minutos</strong> cronometrados desde que comenzás.
+              Tiempo máximo: <strong>{EXAM_TIME_LIMIT_MINUTES} minutos</strong> cronometrados
+              desde que comenzás.
             </li>
             <li>
               🚫 No salgas de la pantalla: si cambiás de pestaña, minimizás o te
