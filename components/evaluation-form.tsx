@@ -172,7 +172,7 @@ export default function EvaluationForm() {
     const missing = total - answered;
     if (missing > 0) {
       const ok = window.confirm(
-        `Tenés ${missing} pregunta(s) sin responder. ¿Enviar la evaluación así?`
+        `Tienes ${missing} pregunta(s) sin responder. ¿Deseas enviar la evaluación así?`
       );
       if (!ok) return;
     }
@@ -314,17 +314,17 @@ export default function EvaluationForm() {
           <h3 className="font-semibold text-amber-900">Reglas de la evaluación</h3>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-amber-900">
             <li>
-              ⏱️ Tenés <strong>{exam ? exam.timeLimitMinutes : EXAM_TIME_LIMIT_MINUTES} minutos</strong> cronometrados
-              desde que tocás «Comenzar». Al agotarse, la evaluación se envía automáticamente
+              ⏱️ Tienes <strong>{exam ? exam.timeLimitMinutes : EXAM_TIME_LIMIT_MINUTES} minutos</strong> cronometrados
+              desde que presionas «Comenzar». Al agotarse, la evaluación se envía automáticamente
               con lo que hayas respondido.
             </li>
             <li>
-              🚫 Si cambiás de pestaña, minimizás la ventana o te desconectás,{' '}
+              🚫 Si cambias de pestaña, minimizas la ventana o te desconectas,{' '}
               <strong>el examen se cierra automáticamente</strong> y se califica con las
               respuestas registradas hasta ese momento.
             </li>
             <li>✉️ Un solo intento por correo electrónico.</li>
-            <li>✍️ Podés enviar antes de tiempo cuando termines.</li>
+            <li>✍️ Puedes enviar antes de tiempo cuando termines.</li>
           </ul>
         </section>
 
@@ -334,7 +334,7 @@ export default function EvaluationForm() {
             disabled={phase === 'starting'}
             className="w-full rounded-xl bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {phase === 'starting' ? 'Comenzando…' : 'Comenzar (el cronómetro arranca ahora)'}
+            {phase === 'starting' ? 'Comenzando…' : 'Comenzar (el cronómetro inicia ahora)'}
           </button>
         </div>
       </form>
@@ -507,7 +507,7 @@ function EndedScreen({ reason }: { reason: EndReason }) {
       <h2 className="mt-4 text-2xl font-bold text-amber-900">{title}</h2>
       <p className="mx-auto mt-2 max-w-md text-amber-800">{message}</p>
       <p className="mt-4 text-sm text-amber-700">
-        Si creés que fue un error, contactá al equipo de selección del Politécnico
+        Si crees que fue un error, contacta al equipo de selección del Politécnico
         Internacional.
       </p>
       <p className="mt-2 text-xs text-amber-600">

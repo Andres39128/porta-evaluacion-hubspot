@@ -44,17 +44,14 @@ export default function HomePage() {
             <li>Preguntas de selección única, selección múltiple y verdadero/falso.</li>
             <li>
               Tiempo máximo: <strong>{EXAM_TIME_LIMIT_MINUTES} minutos</strong> cronometrados
-              desde que comenzás.
+              desde que comienzas.
             </li>
             <li>
-              🚫 No salgas de la pantalla: si cambiás de pestaña, minimizás o te
-              desconectás, el examen se cierra y se califica con lo respondido.
+              🚫 No salgas de la pantalla: si cambias de pestaña, minimizas o te
+              desconectas, el examen se cierra y se califica con lo respondido.
             </li>
             <li>Un solo envío por correo electrónico: revisa tus respuestas antes de finalizar.</li>
-            <li>
-              Al enviar verás la confirmación, pero <strong>no</strong> tu puntaje ni
-              las respuestas correctas.
-            </li>
+            <li>Al enviar verás la confirmación de recibido.</li>
           </ul>
         </div>
 
