@@ -74,8 +74,8 @@ Métrica de **integridad** (¿el puntaje es evidencia confiable?), no de conocim
 
 1. En Supabase Studio → **SQL Editor** → **New query**.
 2. Pega el contenido completo de `supabase/schema.sql` → **Run**.
-3. Nueva query, pega `supabase/seed.sql` → **Run** (carga las 22 preguntas).
-   - Verifica en **Table Editor → questions** que haya 22 filas.
+3. Nueva query, pega `supabase/seed.sql` → **Run** (carga las 24 preguntas).
+   - Verifica en **Table Editor → questions** que haya 24 filas.
 
 ### 3. Crear el Super Admin
 
@@ -114,7 +114,7 @@ npm run dev
 
 | Rol | Flujo |
 |---|---|
-| Candidato | `/` → leer instrucciones → **Iniciar evaluación** → completar datos + 22 preguntas → **Enviar** → confirmación. |
+| Candidato | `/` → leer instrucciones → **Iniciar evaluación** → completar datos + 24 preguntas → **Enviar** → confirmación. |
 | Super Admin | `/admin/login` → credenciales → dashboard con métricas, tabla, filtros y CSV → detalle por candidato → banco de preguntas (CRUD) → clave de respuestas. |
 
 ## Estructura del proyecto
@@ -144,7 +144,7 @@ lib/
 middleware.ts                 # Guard de /admin y /api/admin
 supabase/
   schema.sql                  # Tablas + RLS
-  seed.sql                    # 22 preguntas HubSpot
+  seed.sql                    # 24 preguntas HubSpot
 ```
 
 ## Limitaciones del plan gratuito

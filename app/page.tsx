@@ -21,13 +21,13 @@ export default function HomePage() {
 
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl bg-slate-100 p-4">
-              <p className="text-2xl font-bold text-indigo-600">8</p>
+              <p className="text-2xl font-bold text-indigo-600">9</p>
               <p className="text-sm text-slate-600">
-                preguntas básicas · conceptos del CRM
+                preguntas básicas · conceptos del CRM y Sales Hub
               </p>
             </div>
             <div className="rounded-xl bg-slate-100 p-4">
-              <p className="text-2xl font-bold text-indigo-600">8</p>
+              <p className="text-2xl font-bold text-indigo-600">9</p>
               <p className="text-sm text-slate-600">
                 preguntas intermedias · workflows, scoring y reportes
               </p>

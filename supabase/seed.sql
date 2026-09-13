@@ -1,7 +1,7 @@
 -- ============================================================
--- Seed inicial: banco de preguntas HubSpot (22 preguntas)
--- 8 básicas (1 pt) · 8 intermedias (2 pts) · 6 avanzadas (3 pts)
--- Puntaje máximo: 8 + 16 + 18 = 42 puntos
+-- Seed inicial: banco de preguntas HubSpot (24 preguntas)
+-- 9 básicas (1 pt) · 9 intermedias (2 pts) · 6 avanzadas (3 pts)
+-- Puntaje máximo: 9 + 18 + 18 = 45 puntos
 -- correct_answers usa índices base 0 de "options"
 -- Ejecutar DESPUÉS de schema.sql en el SQL Editor de Supabase
 -- ============================================================
@@ -60,6 +60,12 @@ insert into public.questions (level, type, text, options, correct_answers, point
  '[1]', 1,
  'El identificador por defecto de deduplicación es el correo electrónico, no el teléfono.'),
 
+('basico', 'single',
+ 'En Sales Hub, ¿qué es una cola de tareas (task queue)?',
+ '["Un tablero kanban para mover tratos entre etapas","Una lista priorizada de tareas de seguimiento que el vendedor trabaja en orden, una por una","Un reporte de tareas vencidas agrupadas por equipo","Una automatización que crea tareas cada semana"]',
+ '[1]', 1,
+ 'Las colas de tareas organizan la jornada comercial: el vendedor encola sus tareas de seguimiento y las trabaja secuencialmente.'),
+
 -- ================= NIVEL INTERMEDIO (2 puntos) =================
 
 ('intermedio', 'single',
@@ -109,6 +115,12 @@ insert into public.questions (level, type, text, options, correct_answers, point
  '["Enviar un correo de marketing","Crear una tarea para el propietario del contacto","Aumentar o disminuir una propiedad de puntuación (score)","Emitir facturas electrónicas al cliente"]',
  '[0,1,2]', 2,
  'La facturación electrónica no es una acción nativa de los workflows.'),
+
+('intermedio', 'single',
+ '¿Cuál es la diferencia principal entre una secuencia (sequence) y un workflow en HubSpot?',
+ '["No hay diferencia: son la misma herramienta con nombres distintos","La secuencia inscribe contactos de forma individual para enviar correos 1:1 y se detiene cuando el contacto responde; el workflow automatiza a escala con disparadores y acciones múltiples","El workflow solo sirve para equipos de marketing y la secuencia solo para equipos de ventas","Las secuencias se crean únicamente mediante la API"]',
+ '[1]', 2,
+ 'Las secuencias son cadencias de seguimiento 1:1 que se pausan cuando el contacto responde; los workflows son automatizaciones masivas basadas en disparadores.'),
 
 -- ================= NIVEL AVANZADO (3 puntos) =================
 
