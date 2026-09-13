@@ -41,7 +41,20 @@ create table if not exists public.submissions (
   max_advanced integer not null default 0,
   total_earned integer not null default 0,
   total_max integer not null default 0,
+  end_reason text not null default 'submitted',
   submitted_at timestamptz not null default now()
+);
+
+-- Sesión de examen por correo: cronómetro anclado al servidor
+create table if not exists public.exam_sessions (
+  id uuid primary key default gen_random_uuid(),
+  email text not null unique,
+  candidate_name text not null,
+  phone text not null,
+  position text not null,
+  started_at timestamptz not null default now(),
+  finished boolean not null default false,
+  submission_id uuid references public.submissions(id)
 );
 
 -- RLS activado SIN políticas: ni anon ni authenticated pueden leer/escribir.

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import AdminNav from '../admin-nav';
 import { getSupabaseAdmin } from '@/lib/supabase/server';
 import { classify, levelLabel } from '@/lib/types';
+import { END_REASON_LABELS, type EndReason } from '@/lib/exam';
 import type { Level, SubmissionRow } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -73,6 +74,9 @@ export default async function CandidateDetailPage({
             </p>
             <span className="mt-2 inline-block rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
               Clasificación: {classify(totalPct)}
+            </span>
+            <span className="mt-2 block text-xs text-slate-500">
+              Cierre: {END_REASON_LABELS[(r.end_reason ?? 'submitted') as EndReason]}
             </span>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase/server';
 import { classify } from '@/lib/types';
+import { END_REASON_LABELS, type EndReason } from '@/lib/exam';
 import type { SubmissionRow } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -43,6 +44,7 @@ export async function GET() {
       '% Intermedio',
       '% Avanzado',
       'Clasificación',
+      'Cierre',
     ];
 
     const lines = rows.map((r) =>
@@ -59,6 +61,7 @@ export async function GET() {
         String(pct(r.score_intermediate, r.max_intermediate)),
         String(pct(r.score_advanced, r.max_advanced)),
         classify(pct(r.total_earned, r.total_max)),
+        END_REASON_LABELS[(r.end_reason ?? 'submitted') as EndReason],
       ]
         .map(csvEscape)
         .join(',')

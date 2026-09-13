@@ -41,11 +41,14 @@ export default function HomePage() {
 
           <ul className="list-disc space-y-1 pl-5 text-sm text-slate-600">
             <li>Preguntas de selección única, selección múltiple y verdadero/falso.</li>
-            <li>Duración estimada: 20–30 minutos.</li>
             <li>
-              Un solo envío por correo electrónico: revisa tus respuestas antes de
-              finalizar.
+              Tiempo máximo: <strong>30 minutos</strong> cronometrados desde que comenzás.
             </li>
+            <li>
+              🚫 No salgas de la pantalla: si cambiás de pestaña, minimizás o te
+              desconectás, el examen se cierra y se califica con lo respondido.
+            </li>
+            <li>Un solo envío por correo electrónico: revisa tus respuestas antes de finalizar.</li>
             <li>
               Al enviar verás la confirmación, pero <strong>no</strong> tu puntaje ni
               las respuestas correctas.

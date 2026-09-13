@@ -32,6 +32,19 @@ Aplicación web para la evaluación técnica de candidatos al puesto **Analista 
 - Reporte: puntaje total + % por nivel.
 - Clasificación del candidato (sobre % total): **≥ 80% Avanzado · 50–79% Intermedio · < 50% Básico**.
 
+### Salvaguardas anti-trampa (cronómetro y abandono)
+
+1. **Tiempo máximo: 30 minutos**, con cronómetro **anclado al servidor** (`exam_sessions.started_at`). Recargar la página o reabrir el examen NO reinicia el tiempo: el servidor devuelve siempre el `started_at` original de la sesión por correo.
+2. **Cierre automático por abandono:** si el candidato cambia de pestaña, minimiza la ventana (`visibilitychange → hidden`) o pierde conexión (`offline`), el examen se cierra y se califica **con lo respondido hasta ese momento** (lo no respondido puntúa 0). El cierre usa `fetch keepalive` y `navigator.sendBeacon` (en `pagehide`), con reintento al recuperar conexión.
+3. **Envíos parciales aceptados solo por cierre automático:** timeout, abandono o desconexión. El motivo queda registrado en `submissions.end_reason` (visible en el panel y el CSV: Envío normal / Tiempo agotado / Salió de la pantalla / Se desconectó / Sesión expirada).
+4. **Sesión abandonada vencida:** si un candidato inicia y nunca envía, al volver pasada la ventana de tiempo la sesión se cierra con 0 respuestas (`expired`) y el correo queda bloqueado — evita "estudiar" las preguntas fuera de línea.
+5. **Idempotencia:** los eventos de cierre pueden dispararse más de una vez (timeout + beacon); el servidor responde 200 sin duplicar registros.
+6. **Integridad temporal server-side:** un envío "normal" que llega después de límite + gracia (2 min) se reclasifica como `timeout`.
+
+Configuración: límite y gracia viven en `lib/exam.ts` (`EXAM_TIME_LIMIT_MINUTES`, `EXAM_GRACE_SECONDS`).
+
+> **Proyecto ya desplegado:** para agregar esta funcionalidad ejecutá `supabase/migration-001-exam-sessions.sql` en el SQL Editor (es aditivo, no rompe la versión anterior).
+
 ## Configuración paso a paso
 
 ### 1. Crear el proyecto en Supabase (gratis)
@@ -101,9 +114,9 @@ app/
     preguntas/page.tsx        # CRUD del banco
     actions.ts                # Server actions (auth + CRUD)
   api/
-    questions/route.ts        # GET público (sin respuestas correctas)
-    submissions/route.ts      # POST público (califica en servidor)
-    admin/export/route.ts     # GET CSV (protegido por middleware)
+    exam/start/route.ts        # POST público: inicia sesión con cronómetro server-side
+    submissions/route.ts       # POST público: cierra y califica en servidor (acepta parciales)
+    admin/export/route.ts      # GET CSV (protegido por middleware)
 components/
   evaluation-form.tsx         # Formulario cliente
 lib/

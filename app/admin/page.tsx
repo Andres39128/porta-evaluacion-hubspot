@@ -2,6 +2,8 @@ import Link from 'next/link';
 import AdminNav from './admin-nav';
 import { getSupabaseAdmin } from '@/lib/supabase/server';
 import { classify, levelLabel } from '@/lib/types';
+import { END_REASON_LABELS } from '@/lib/exam';
+import type { EndReason } from '@/lib/exam';
 import type { Level, SubmissionRow } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -28,6 +30,14 @@ const badgeClass: Record<string, string> = {
   Básico: 'bg-slate-100 text-slate-700',
   Intermedio: 'bg-amber-100 text-amber-700',
   Avanzado: 'bg-emerald-100 text-emerald-700',
+};
+
+const endReasonClass: Record<string, string> = {
+  submitted: 'bg-slate-100 text-slate-600',
+  timeout: 'bg-blue-100 text-blue-700',
+  left_screen: 'bg-amber-100 text-amber-700',
+  offline: 'bg-amber-100 text-amber-700',
+  expired: 'bg-red-100 text-red-700',
 };
 
 export default async function AdminDashboard({
@@ -183,12 +193,13 @@ export default async function AdminDashboard({
               <th className="px-4 py-3 text-center">% Avanzado</th>
               <th className="px-4 py-3 text-center">Total</th>
               <th className="px-4 py-3">Clasificación</th>
+              <th className="px-4 py-3">Cierre</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-10 text-center text-slate-500">
+                <td colSpan={8} className="px-4 py-10 text-center text-slate-500">
                   {hasFilters
                     ? 'No hay evaluaciones en el rango de fechas seleccionado.'
                     : 'Aún no hay evaluaciones enviadas.'}
@@ -198,6 +209,7 @@ export default async function AdminDashboard({
               rows.map((r) => {
                 const p = pct(r.total_earned, r.total_max);
                 const c = classify(p);
+                const reason = (r.end_reason ?? 'submitted') as EndReason;
                 return (
                   <tr key={r.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
                     <td className="px-4 py-3">
@@ -216,6 +228,11 @@ export default async function AdminDashboard({
                     </td>
                     <td className="px-4 py-3">
                       <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${badgeClass[c]}`}>{c}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${endReasonClass[reason] ?? endReasonClass.submitted}`}>
+                        {END_REASON_LABELS[reason]}
+                      </span>
                     </td>
                   </tr>
                 );
