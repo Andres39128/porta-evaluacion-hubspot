@@ -9,7 +9,7 @@ export default function HomePage() {
           Evaluación técnica de HubSpot
         </h1>
         <p className="mt-2 text-lg text-slate-600">
-          Puesto: <strong>Analista de Datos y CRM</strong>
+          Perfil: <strong>Analista de Datos y CRM</strong>
         </p>
 
         <div className="mt-6 space-y-4 text-slate-700">
