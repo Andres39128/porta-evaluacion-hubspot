@@ -1,6 +1,7 @@
 import { getSupabaseAdmin } from '@/lib/supabase/server';
 import { classify } from '@/lib/types';
 import { END_REASON_LABELS, type EndReason } from '@/lib/exam';
+import { computeConfidence } from '@/lib/confidence';
 import type { SubmissionRow } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -45,6 +46,8 @@ export async function GET() {
       '% Avanzado',
       'Clasificación',
       'Cierre',
+      'Confiabilidad',
+      'Banderas',
     ];
 
     const lines = rows.map((r) =>
@@ -62,6 +65,14 @@ export async function GET() {
         String(pct(r.score_advanced, r.max_advanced)),
         classify(pct(r.total_earned, r.total_max)),
         END_REASON_LABELS[(r.end_reason ?? 'submitted') as EndReason],
+        (() => {
+          const conf = computeConfidence(r.results, r.elapsed_seconds ?? null, r.end_reason ?? 'submitted');
+          return `${conf.score} (${conf.level})`;
+        })(),
+        (() => {
+          const conf = computeConfidence(r.results, r.elapsed_seconds ?? null, r.end_reason ?? 'submitted');
+          return conf.flags.length > 0 ? conf.flags.map((f) => f.label).join(' | ') : '';
+        })(),
       ]
         .map(csvEscape)
         .join(',')

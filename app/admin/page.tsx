@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/server';
 import { classify, levelLabel } from '@/lib/types';
 import { END_REASON_LABELS } from '@/lib/exam';
 import type { EndReason } from '@/lib/exam';
+import { computeConfidence, CONFIDENCE_BADGE_CLASS } from '@/lib/confidence';
 import type { Level, SubmissionRow } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -194,12 +195,13 @@ export default async function AdminDashboard({
               <th className="px-4 py-3 text-center">Total</th>
               <th className="px-4 py-3">Clasificación</th>
               <th className="px-4 py-3">Cierre</th>
+              <th className="px-4 py-3">Confiabilidad</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-slate-500">
+                <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
                   {hasFilters
                     ? 'No hay evaluaciones en el rango de fechas seleccionado.'
                     : 'Aún no hay evaluaciones enviadas.'}
@@ -210,6 +212,8 @@ export default async function AdminDashboard({
                 const p = pct(r.total_earned, r.total_max);
                 const c = classify(p);
                 const reason = (r.end_reason ?? 'submitted') as EndReason;
+                const conf = computeConfidence(r.results, r.elapsed_seconds ?? null, reason);
+                const flagSummary = conf.flags.map((f) => f.label).join(' · ');
                 return (
                   <tr key={r.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
                     <td className="px-4 py-3">
@@ -233,6 +237,16 @@ export default async function AdminDashboard({
                       <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${endReasonClass[reason] ?? endReasonClass.submitted}`}>
                         {END_REASON_LABELS[reason]}
                       </span>
+                    </td>
+                    <td className="px-4 py-3" title={flagSummary}>
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${CONFIDENCE_BADGE_CLASS[conf.level]}`}>
+                        {conf.score} · {conf.level}
+                      </span>
+                      {conf.flags.length > 0 && (
+                        <span className="ml-1 text-xs text-slate-400" title={flagSummary}>
+                          ⚑{conf.flags.length}
+                        </span>
+                      )}
                     </td>
                   </tr>
                 );

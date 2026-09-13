@@ -42,6 +42,7 @@ create table if not exists public.submissions (
   total_earned integer not null default 0,
   total_max integer not null default 0,
   end_reason text not null default 'submitted',
+  elapsed_seconds integer,
   submitted_at timestamptz not null default now()
 );
 

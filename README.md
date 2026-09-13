@@ -45,6 +45,23 @@ Configuración: límite y gracia viven en `lib/exam.ts` (`EXAM_TIME_LIMIT_MINUTE
 
 > **Proyecto ya desplegado:** para agregar esta funcionalidad ejecutá `supabase/migration-001-exam-sessions.sql` en el SQL Editor (es aditivo, no rompe la versión anterior).
 
+### Índice de confiabilidad del intento
+
+Métrica de **integridad** (¿el puntaje es evidencia confiable?), no de conocimiento. Se calcula **en lectura** desde el snapshot (`results` + `elapsed_seconds` + `end_reason`), por lo que aplica retroactivamente a todos los envíos y se recalcula si el algoritmo mejora.
+
+- **Base 75** · +15 si completitud ≥ 90% (ó +8 si ≥ 70%) · +5 por envío normal.
+- **Banderas** (con penalización y explicación legible en el panel):
+  - `perfect_accuracy` (−10): acierto 100% con ≥ 5 respondidas — suave, sugerir verificar en entrevista.
+  - `high_accuracy_low_completion` (−30): ≥ 90% de acierto con ≤ 60% de cobertura — patrón compatible con consulta externa que no alcanzó a cubrir el examen.
+  - `impossible_speed` (−35): promedio < 12s/pregunta respondida con ≥ 90% de acierto — compatible con clave compartida.
+  - `inverted_levels` (−15): el acierto en avanzado supera al básico por > 25 pts — patrón atípico (lo normal es decrecer con la dificultad).
+- **Nivel:** ≥ 75 Confiable · 45–74 Revisar · < 45 Sospechoso.
+- Visible en: columna de la tabla del panel (badge + contador de banderas), tarjeta del detalle con explicación de cada bandera, y columnas en el CSV.
+- Umbral de velocidad configurable en `lib/confidence.ts` (`IMPOSSIBLE_SECONDS_PER_QUESTION`).
+- Tests ejecutables: `node scripts/test-confidence.mts`.
+
+> **Migración 002:** `supabase/migration-002-elapsed-seconds.sql` agrega `elapsed_seconds` a `submissions` (aditiva; requerida solo para la bandera de velocidad en envíos nuevos).
+
 ## Configuración paso a paso
 
 ### 1. Crear el proyecto en Supabase (gratis)

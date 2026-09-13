@@ -55,6 +55,7 @@ export interface SubmissionRow {
   total_earned: number;
   total_max: number;
   end_reason?: 'submitted' | 'timeout' | 'left_screen' | 'offline' | 'expired';
+  elapsed_seconds?: number | null;
   submitted_at: string;
 }
 

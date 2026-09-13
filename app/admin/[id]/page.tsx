@@ -3,10 +3,17 @@ import { notFound } from 'next/navigation';
 import AdminNav from '../admin-nav';
 import { getSupabaseAdmin } from '@/lib/supabase/server';
 import { classify, levelLabel } from '@/lib/types';
-import { END_REASON_LABELS, type EndReason } from '@/lib/exam';
+import { END_REASON_LABELS, EXAM_TIME_LIMIT_MINUTES, type EndReason } from '@/lib/exam';
+import { computeConfidence, CONFIDENCE_BADGE_CLASS } from '@/lib/confidence';
 import type { Level, SubmissionRow } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
+
+function fmtTime(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
 
 function pct(earned: number, max: number): number {
   return max > 0 ? Math.round((earned / max) * 100) : 0;
@@ -43,6 +50,8 @@ export default async function CandidateDetailPage({
   const r = data as SubmissionRow;
 
   const totalPct = pct(r.total_earned, r.total_max);
+  const reason = (r.end_reason ?? 'submitted') as EndReason;
+  const conf = computeConfidence(r.results, r.elapsed_seconds ?? null, reason);
   const levels: { key: Level; earned: number; max: number }[] = [
     { key: 'basico', earned: r.score_basic, max: r.max_basic },
     { key: 'intermedio', earned: r.score_intermediate, max: r.max_intermediate },
@@ -76,7 +85,9 @@ export default async function CandidateDetailPage({
               Clasificación: {classify(totalPct)}
             </span>
             <span className="mt-2 block text-xs text-slate-500">
-              Cierre: {END_REASON_LABELS[(r.end_reason ?? 'submitted') as EndReason]}
+              Cierre: {END_REASON_LABELS[reason]}
+              {r.elapsed_seconds != null &&
+                ` · Tiempo utilizado: ${fmtTime(r.elapsed_seconds)} de ${fmtTime(EXAM_TIME_LIMIT_MINUTES * 60)}`}
             </span>
           </div>
         </div>
@@ -102,6 +113,52 @@ export default async function CandidateDetailPage({
             );
           })}
         </div>
+      </div>
+
+      {/* Confiabilidad del intento */}
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+              Confiabilidad del intento
+            </h2>
+            <p className="text-xs text-slate-400">
+              Mide la integridad de la evidencia, no el conocimiento. Respondidas: {conf.answered}/{conf.total} · Acierto sobre respondidas: {Math.round(conf.accuracy * 100)}%.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <p className="text-2xl font-bold">{conf.score}<span className="text-sm text-slate-400">/100</span></p>
+            </div>
+            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${CONFIDENCE_BADGE_CLASS[conf.level]}`}>
+              {conf.level}
+            </span>
+          </div>
+        </div>
+        <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
+          <div
+            className={`h-full rounded-full ${
+              conf.level === 'Confiable' ? 'bg-emerald-500' : conf.level === 'Revisar' ? 'bg-amber-500' : 'bg-red-500'
+            }`}
+            style={{ width: `${conf.score}%` }}
+          />
+        </div>
+        {conf.flags.length > 0 ? (
+          <ul className="mt-4 space-y-2">
+            {conf.flags.map((f) => (
+              <li key={f.code} className="rounded-lg bg-amber-50 px-3 py-2 text-sm">
+                <p className="font-semibold text-amber-800">
+                  ⚑ {f.label} <span className="font-normal text-amber-600">(−{f.penalty} pts)</span>
+                </p>
+                <p className="mt-0.5 text-xs text-amber-700">{f.detail}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-4 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            ✓ Sin banderas: el patrón de respuestas, tiempos y completitud es consistente con un intento legítimo.
+          </p>
+        )}
       </div>
 
       {/* Resultado pregunta por pregunta (snapshot del envío) */}

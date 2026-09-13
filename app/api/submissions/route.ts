@@ -102,6 +102,7 @@ export async function POST(request: Request) {
     // Integridad temporal: si el envió llegó tarde, se reporta como timeout.
     let reason = endReason;
     const startedMs = new Date(session.started_at).getTime();
+    const elapsedSeconds = Math.max(0, Math.round((Date.now() - startedMs) / 1000));
     if (
       reason === 'submitted' &&
       Date.now() > startedMs + (EXAM_TIME_LIMIT_MINUTES * 60 + EXAM_GRACE_SECONDS) * 1000
@@ -129,6 +130,7 @@ export async function POST(request: Request) {
         total_earned: grade.total_earned,
         total_max: grade.total_max,
         end_reason: reason,
+        elapsed_seconds: elapsedSeconds,
       })
       .select('id')
       .single();
