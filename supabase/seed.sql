@@ -48,11 +48,11 @@ insert into public.questions (level, type, text, options, correct_answers, point
  '[0]', 1,
  'El formulario hace upsert del contacto usando el email como identificador único.'),
 
-('basico', 'boolean',
- 'Un trato (deal) puede existir en HubSpot sin estar asociado a ningún contacto.',
- '["Verdadero","Falso"]',
- '[0]', 1,
- 'Las asociaciones son opcionales, aunque recomendables para trazabilidad comercial.'),
+('basico', 'single',
+ 'En Sales Hub, ¿para qué sirve la herramienta de pronóstico (forecast)?',
+ '["Predecir automáticamente qué contactos comprarán usando inteligencia artificial","Proyectar los ingresos esperados según los tratos abiertos, su etapa y su probabilidad de cierre","Programar recordatorios automáticos de seguimiento a clientes","Medir el alcance de las publicaciones en redes sociales"]',
+ '[1]', 1,
+ 'El pronóstico pondera el pipeline por etapa y probabilidad de cierre, y lo compara con las metas del equipo comercial.'),
 
 ('basico', 'boolean',
  'En HubSpot, el número de teléfono actúa por defecto como identificador para detectar contactos duplicados.',
@@ -82,9 +82,9 @@ insert into public.questions (level, type, text, options, correct_answers, point
 
 ('intermedio', 'single',
  '¿Qué propiedad usarías para mostrar la suma de los montos de los tratos ganados de cada empresa?',
- '["Una propiedad de texto enriquecido","Una propiedad calculada tipo rollup con operación de suma sobre los tratos asociados","Una propiedad de archivo (file)","Una propiedad de fecha"]',
+ '["Una propiedad de texto enriquecido","Una propiedad de cálculo tipo acumulación (rollup) que suma los montos de los tratos asociados","Una propiedad de archivo (file)","Una propiedad de fecha"]',
  '[1]', 2,
- 'Las propiedades rollup agregan (suma, promedio, máximo, conteo) valores de registros asociados.'),
+ 'Las propiedades de cálculo tipo acumulación (rollup) agregan valores de registros asociados: suma, promedio, máximo, mínimo o conteo.'),
 
 ('intermedio', 'single',
  '¿Cuál es la diferencia entre una lista activa y una lista estática en HubSpot?',
@@ -102,7 +102,7 @@ insert into public.questions (level, type, text, options, correct_answers, point
  '¿Cuáles de estas métricas pueden analizarse con reportes nativos de Marketing Hub? (selecciona todas las correctas)',
  '["Tasa de conversión de formularios","Ingresos atribuidos a campañas de marketing","Latencia promedio de los servidores del sitio web","Aperturas y clics de correos de marketing"]',
  '[0,1,3]', 2,
- 'La monitorización de infraestructura del sitio no forma parte de los reportes nativos de HubSpot.'),
+ 'Las tres son métricas nativas (la atribución de ingresos requiere plan Professional/Enterprise); la monitorización de infraestructura no forma parte de HubSpot.'),
 
 ('intermedio', 'multiple',
  '¿Cuáles de las siguientes acciones puede ejecutar un workflow de HubSpot de forma nativa? (selecciona todas las correctas)',
@@ -120,9 +120,9 @@ insert into public.questions (level, type, text, options, correct_answers, point
 
 ('avanzado', 'single',
  'Al recibir un webhook de HubSpot en tu endpoint, ¿cómo verificas que la petición proviene realmente de HubSpot?',
- '["Confirmando que el cuerpo venga en formato JSON","Validando la firma del encabezado X-HubSpot-Signature (HMAC-SHA256 con el secreto de la aplicación)","Comprobando la dirección IP del visitante","No es necesario verificar nada"]',
+ '["Confirmando que el cuerpo venga en formato JSON","Validando la firma del encabezado X-HubSpot-Signature-v3 (HMAC-SHA256 calculado con el secreto de la aplicación)","Comprobando la dirección IP del visitante","No es necesario verificar nada"]',
  '[1]', 3,
- 'El signature header calculado con el app secret evita peticiones falsificadas contra el endpoint.'),
+ 'La firma v3 (HMAC-SHA256 sobre método, URL, timestamp y cuerpo con el app secret) garantiza que la petición proviene de HubSpot.'),
 
 ('avanzado', 'single',
  '¿Qué modelo de atribución distribuye el crédito por igual entre todos los puntos de contacto del recorrido?',
